@@ -1,0 +1,76 @@
+name: Publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.go"
+      - "go.mod"
+      - "CHANGELOG.md"
+      - ".github/workflows/publish.yml"
+
+concurrency:
+  group: publish-go
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ["1.22", "1.23", "1.24"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - run: go test ./...
+      - run: go vet ./...
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Resolve version and decide whether to tag
+        id: version
+        run: |
+          set -euo pipefail
+          VERSION="$(grep -E '^\s*const Version\s*=' version.go | sed -E 's/.*"([^"]+)".*/\1/')"
+          if [ -z "$VERSION" ]; then
+            echo "::error::Could not read Version from version.go"
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          {
+            echo "version=$VERSION"
+            echo "tag=$TAG"
+          } >> "$GITHUB_OUTPUT"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists — skipping tag."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "New version $VERSION — will tag."
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create and push release tag
+        if: steps.version.outputs.should_publish == 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.tag }}" -m "Release ${{ steps.version.outputs.tag }}"
+          git push origin "${{ steps.version.outputs.tag }}"
