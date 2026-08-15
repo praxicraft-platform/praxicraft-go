@@ -8,7 +8,7 @@ Use it to invite candidates, check invite quota, manage webhooks, enroll hiring 
 go get github.com/praxicraft-platform/praxicraft-go
 ```
 
-**Requires Go 1.22+.** Full API reference: [docs.praxicraft.com](https://docs.praxicraft.com)
+**Requires Go 1.22+.** Full API reference: [https://docs.praxicraft.com](https://docs.praxicraft.com/sdks/go) 
 
 ## Table of Contents
 
