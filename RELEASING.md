@@ -31,3 +31,9 @@ After the tag exists, pkg.go.dev indexes the module (may take a few minutes; you
 ## One-time setup
 
 No registry credentials. Ensure the default branch is `main` and the `github-actions` bot can push tags (`contents: write` on the publish job).
+
+## GitHub Release
+
+The Publish workflow also creates a **GitHub Release** for tag `v{version}` (with generated notes and package assets where applicable).
+
+You can run **Actions → Publish → Run workflow** manually (`workflow_dispatch`) after bumping the version on `main`.
