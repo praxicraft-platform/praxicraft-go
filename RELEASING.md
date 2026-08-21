@@ -37,3 +37,9 @@ No registry credentials. Ensure the default branch is `main` and the `github-act
 The Publish workflow also creates a **GitHub Release** for tag `v{version}` (with generated notes and package assets where applicable).
 
 You can run **Actions → Publish → Run workflow** manually (`workflow_dispatch`) after bumping the version on `main`.
+
+## Auto-bump
+
+Pushes to `main` that change package source auto-bump the patch version, update `CHANGELOG.md`, commit `chore(release): vX.Y.Z`, tag, create a **GitHub Release**, and publish to the language registry when credentials are configured.
+
+Skip with `[skip release]` in the commit message.
