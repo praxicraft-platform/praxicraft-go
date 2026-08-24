@@ -40,6 +40,8 @@ You can run **Actions → Publish → Run workflow** manually (`workflow_dispatc
 
 ## Auto-bump
 
-Pushes to `main` that change package source auto-bump the patch version, update `CHANGELOG.md`, commit `chore(release): vX.Y.Z`, tag, create a **GitHub Release**, and publish to the language registry when credentials are configured.
+Pushes to `main` that change package source auto-bump the patch version and `CHANGELOG.md` in the runner, create a local `chore(release)` commit, and **push only the annotated tag** (not `main` — branch protection requires PRs). The tag retains the release commit. Then CI creates a **GitHub Release** and publishes to the language registry when credentials are configured.
+
+Version files on `main` may lag until a follow-up PR syncs them; published artifacts always use the tagged version.
 
 Skip with `[skip release]` in the commit message.
