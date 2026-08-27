@@ -1,7 +1,7 @@
 package praxicraft
 
-// Version is the SDK release version. Keep in sync with git tags (v0.1.0).
-const Version = "0.1.1"
+// Version is the SDK release version. Keep in sync with git tags (v1.0.0).
+const Version = "1.0.0"
 
 const (
 	defaultBaseURL   = "https://assess.praxicraft.com"

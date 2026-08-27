@@ -325,16 +325,16 @@ func TestIterAllStopsOnRepeatCursor(t *testing.T) {
 	}
 }
 
-func TestRemoveCaseKeepsBodyIDRaw(t *testing.T) {
+func TestRemoveTaskKeepsBodyIDRaw(t *testing.T) {
 	c := testClient(t, roundTripFunc(func(r *http.Request) (*http.Response, error) {
 		var body map[string]any
 		_ = json.NewDecoder(r.Body).Decode(&body)
-		if body["assessment_case_id"] != "case/with/slash" {
+		if body["assessment_task_id"] != "task/with/slash" {
 			t.Fatalf("%#v", body)
 		}
 		return &http.Response{StatusCode: 204, Body: io.NopCloser(bytes.NewReader(nil)), Header: http.Header{}}, nil
 	}))
-	if err := c.Assessments.RemoveCase("demo", "case/with/slash"); err != nil {
+	if err := c.Assessments.RemoveTask("demo", "task/with/slash"); err != nil {
 		t.Fatal(err)
 	}
 }
