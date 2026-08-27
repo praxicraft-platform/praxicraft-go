@@ -38,28 +38,28 @@ func (r *AssessmentsResource) Activate(assessment string) (Assessment, error) {
 	return r.Update(assessment, map[string]any{"status": "active"})
 }
 
-func (r *AssessmentsResource) ListCases(assessment string, params map[string]any) (Page[map[string]any], error) {
+func (r *AssessmentsResource) ListTasks(assessment string, params map[string]any) (Page[map[string]any], error) {
 	key, err := pathSegment(assessment, "assessment")
 	if err != nil {
 		return Page[map[string]any]{}, err
 	}
-	return DoAs[Page[map[string]any]](r.client, "GET", "/assessments/"+key+"/cases/", &RequestOptions{Params: params})
+	return DoAs[Page[map[string]any]](r.client, "GET", "/assessments/"+key+"/tasks/", &RequestOptions{Params: params})
 }
 
-// AttachCases attaches cases. Pass "cases" ([]map) and/or "case_id"/"source" in body.
-func (r *AssessmentsResource) AttachCases(assessment string, body map[string]any) (map[string]any, error) {
+// AttachTasks attaches tasks. Pass "tasks" ([]map) and/or "task_id"/"source" in body.
+func (r *AssessmentsResource) AttachTasks(assessment string, body map[string]any) (map[string]any, error) {
 	if len(body) == 0 {
-		return nil, &APIError{Message: "AttachCases requires cases or case_id", ErrCode: "INVALID_ARGUMENT"}
+		return nil, &APIError{Message: "AttachTasks requires tasks or task_id", ErrCode: "INVALID_ARGUMENT"}
 	}
 	key, err := pathSegment(assessment, "assessment")
 	if err != nil {
 		return nil, err
 	}
-	return DoAs[map[string]any](r.client, "POST", "/assessments/"+key+"/cases/attach/", &RequestOptions{JSON: body})
+	return DoAs[map[string]any](r.client, "POST", "/assessments/"+key+"/tasks/attach/", &RequestOptions{JSON: body})
 }
 
-func (r *AssessmentsResource) ReplaceCases(assessment string, cases []map[string]any, extra map[string]any) (map[string]any, error) {
-	body := map[string]any{"cases": cases}
+func (r *AssessmentsResource) ReplaceTasks(assessment string, tasks []map[string]any, extra map[string]any) (map[string]any, error) {
+	body := map[string]any{"tasks": tasks}
 	for k, v := range extra {
 		body[k] = v
 	}
@@ -67,20 +67,20 @@ func (r *AssessmentsResource) ReplaceCases(assessment string, cases []map[string
 	if err != nil {
 		return nil, err
 	}
-	return DoAs[map[string]any](r.client, "PUT", "/assessments/"+key+"/cases/replace/", &RequestOptions{JSON: body})
+	return DoAs[map[string]any](r.client, "PUT", "/assessments/"+key+"/tasks/replace/", &RequestOptions{JSON: body})
 }
 
-func (r *AssessmentsResource) RemoveCase(assessment, assessmentCaseID string) error {
+func (r *AssessmentsResource) RemoveTask(assessment, assessmentTaskID string) error {
 	key, err := pathSegment(assessment, "assessment")
 	if err != nil {
 		return err
 	}
-	caseID := strings.TrimSpace(assessmentCaseID)
-	if caseID == "" {
-		return &APIError{Message: "assessmentCaseID must be a non-empty string", ErrCode: "INVALID_ARGUMENT"}
+	taskID := strings.TrimSpace(assessmentTaskID)
+	if taskID == "" {
+		return &APIError{Message: "assessmentTaskID must be a non-empty string", ErrCode: "INVALID_ARGUMENT"}
 	}
-	_, err = DoAs[struct{}](r.client, "DELETE", "/assessments/"+key+"/cases/remove/", &RequestOptions{
-		JSON: map[string]any{"assessment_case_id": caseID},
+	_, err = DoAs[struct{}](r.client, "DELETE", "/assessments/"+key+"/tasks/remove/", &RequestOptions{
+		JSON: map[string]any{"assessment_task_id": taskID},
 	})
 	return err
 }

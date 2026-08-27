@@ -109,7 +109,7 @@ Transient `429` / `5xx` / transport failures retry automatically (default 2 retr
 | Resource | Common methods |
 |----------|----------------|
 | `client.Org` | `Retrieve()`, `Stats()` |
-| `client.Assessments` | `List()`, `Retrieve()`, `Create()`, `Update()`, `Activate()`, `ListCases()`, `AttachCases()`, `ReplaceCases()`, `RemoveCase()` |
+| `client.Assessments` | `List()`, `Retrieve()`, `Create()`, `Update()`, `Activate()`, `ListTasks()`, `AttachTasks()`, `ReplaceTasks()`, `RemoveTask()` |
 | `client.Invites` | `Create()`, `BulkCreate()`, `List()`, `Retrieve()`, `Remind()`, `Cancel()` |
 | `client.Results` | `List()`, `Retrieve()`, `IterAll()` |
 | `client.Webhooks` | `List()`, `Create()`, `Retrieve()`, `Update()`, `Delete()`, `Test()`, `Deliveries()` |
